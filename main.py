@@ -19,8 +19,10 @@ if __name__ == '__main__':
     for i in range(300):
         simulation.generating_pkt_ramdom_grade_and_node()
 
+
     simulation.print_network()
 
+    simulation.transmit_pkt_to_next_grade(6)
 
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

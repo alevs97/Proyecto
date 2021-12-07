@@ -11,13 +11,3 @@ class Grade:
         return self.list_nodes[num_node]
 
 
-
-    def validation_grade_1(self):
-        """
-        Description:
-        Validation when the grade is equal to 1, and will transmit
-        to the sink
-        """
-        if self.num_grade == 1:
-            pass
-
