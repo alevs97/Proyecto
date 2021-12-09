@@ -32,6 +32,7 @@ class Simulation:
 
         # Colision total
         self.number_colision_pkt = 0
+        self.number_pkt_descarter_full_buffer = 0
         self.pkt_arribed_sink = 0
 
         self.time_arribe = 0
@@ -87,6 +88,31 @@ class Simulation:
         # Adding
         node.adding_pkt_to_buffer()
 
+    def transmit_pkt_to_next_grade(self, num_grade):
+        """
+        :param num_grade: Grade that is transmiting a pkt
+        :return: void
+        """
+        # Call cantention process
+        node_to_trasmit = self.contention_process(num_grade)
+        if node_to_trasmit == None:
+            self.number_colision_pkt = self.number_colision_pkt + 1
+            print("colision")
+        else:
+            node_to_trasmit.transmiting_pkt_to_next_grade()
+            index_node_transmit = node_to_trasmit.get_num_node()
+            print("Grado " + str(num_grade))
+            print(node_to_trasmit)
+
+            next_num_grade = num_grade-1
+            val_grade_cero = self.verify_grade_zero_receive(next_num_grade, index_node_transmit)
+            if val_grade_cero == True:
+                print("Recibio sink")
+            else:
+                print("Recibio grado")
+
+
+
     def contention_process(self, num_grade):
         """
         Make the contention process in a specific grade
@@ -126,41 +152,27 @@ class Simulation:
         min_value_ranura = min(list_value_mini_ranuras)
         number_nodes_with_min_value = 0
         index_node_transmit = 0
-        print(min_value_ranura)
 
         for value_min_ranura in range(0, len(list_value_mini_ranuras)):
-            print(list_value_mini_ranuras[value_min_ranura])
             if list_value_mini_ranuras[value_min_ranura] == min_value_ranura:
                 number_nodes_with_min_value = number_nodes_with_min_value + 1
                 index_node_transmit = value_min_ranura
 
         if number_nodes_with_min_value != 1:
-            self.number_colision_pkt = self.number_colision_pkt + 1
-            print("colision")
-            print(list_value_mini_ranuras)
             return None
         else:
             winner_node = list_nodes_with_pkt[index_node_transmit]
             print(winner_node)
             return winner_node
 
-    def transmit_pkt_to_next_grade(self, num_grade):
-        """
-        :param num_grade: Grade that is transmiting a pkt
-        :return: void
-        """
-        # Call cantention process
-        node_to_trasmit = self.contention_process(num_grade)
-        if node_to_trasmit == None:
-            #Colision case
-            print("Todo")
+    def verify_grade_zero_receive(self, num_grade,index_node_receive):
+        if num_grade == -1:
+            self.pkt_arribed_sink = self.pkt_arribed_sink + 1
+            return True
         else:
-            node_to_trasmit.transmiting_pkt_to_next_grade()
-            index_node_transmit = node_to_trasmit.get_num_node()
-            print("Grado "+str(num_grade))
-            print(node_to_trasmit)
+            self.receive_pkt_in_grade(num_grade,index_node_receive)
+            return False
 
-            self.receive_pkt_in_grade(num_grade-1, index_node_transmit)
 
     def receive_pkt_in_grade(self, num_grade, index_node_receive):
         """
@@ -172,32 +184,21 @@ class Simulation:
         # Getting node
         grade_to_receive = self.network[num_grade]
         node_to_receive = grade_to_receive.list_nodes[index_node_receive]
-        node_to_receive.adding_pkt_to_buffer()
-        print("Grado " + str(num_grade))
-
-        print(node_to_receive)
-    
-       
-    def verify_grade_zero (self, num_grade):
-        if num_grade==0:
-            self.pkt_arribed_sink = self.pkt_arribed_sink +1
+        verifi_space_node = node_to_receive.adding_pkt_to_buffer()
+        if(verifi_space_node == False):
+            self.number_pkt_descarter_full_buffer = self.number_pkt_descarter_full_buffer + 1
+            print("Buffer " +node_to_receive + "FULL")
         else:
-            self.transmit_pkt_to_next_grade(num_grade)
-    
+            print("Grado " + str(num_grade))
+            print(node_to_receive)
+
     def ini_sim (self):
-        while self.time_arribe<=self.time_simulation:
-            self.variable=0 
+        while self.time_arribe <= self.time_simulation:
+            self.variable = 0
             # Todo: u , nuevo t , ta
             self.generating_pkt_ramdom_grade_and_node()
             for num_grade in range(0,7):
                 self.transmit_pkt_to_next_grade(num_grade)
-
-
-
-            
-            
-    
-    
 
     def print_network(self):
         """

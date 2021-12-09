@@ -23,7 +23,10 @@ if __name__ == '__main__':
 
     simulation.print_network()
 
-    simulation.transmit_pkt_to_next_grade(6)
+    for i in range(6,-1,-1):
+        print(i)
+        simulation.transmit_pkt_to_next_grade(i)
+
 
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
