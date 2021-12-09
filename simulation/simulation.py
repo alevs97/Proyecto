@@ -32,6 +32,11 @@ class Simulation:
 
         # Colision total
         self.number_colision_pkt = 0
+        self.pkt_arribed_sink = 0
+
+        self.time_arribe = 0
+        self.time_simulation = 0
+        self.variable = 0
 
 
         # Variables performance
@@ -172,11 +177,26 @@ class Simulation:
 
         print(node_to_receive)
     
-    """    
-    def verify_grade_zero (self, verify_num_grade):
-        if verify_num_grade==0 
+       
+    def verify_grade_zero (self, num_grade):
+        if num_grade==0:
+            self.pkt_arribed_sink = self.pkt_arribed_sink +1
+        else:
+            self.transmit_pkt_to_next_grade(num_grade)
+    
+    def ini_sim (self):
+        while self.time_arribe<=self.time_simulation:
+            self.variable=0 
+            # Todo: u , nuevo t , ta
+            self.generating_pkt_ramdom_grade_and_node()
+            for num_grade in range(0,7):
+                self.transmit_pkt_to_next_grade(num_grade)
+
+
+
             
-     """
+            
+    
     
 
     def print_network(self):
