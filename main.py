@@ -2,6 +2,7 @@ from simulation.simulation import Simulation
 
 if __name__ == '__main__':
     simulation = Simulation(
+        
         mesageDifs=10e-3,
         mesageSifs=5e-3,
         mesageRts=11e-3,
@@ -10,7 +11,7 @@ if __name__ == '__main__':
         mesageData=45e-3,
         num_nodos=5,
         ranuSleeping=18,
-        maxMiniRanueras=16,
+        max_mini_ranuras=16,
         lambda_pkt=0.0005,
         size_buffer=15,
         num_grades=7,

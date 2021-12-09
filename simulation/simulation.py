@@ -1,4 +1,5 @@
 from entities.grade import Grade
+#from entities.grade import Grade
 from entities.node import Node
 from random import randint
 
@@ -29,6 +30,8 @@ class Simulation:
         # Setting nodes and grades
         self.network = self.setting_entities()
 
+        # Colision total
+        self.number_colision_pkt = 0
 
 
         # Variables performance
@@ -87,6 +90,7 @@ class Simulation:
         """
         list_nodes_with_pkt = self.get_nodes_with_pkt_to_transmit(num_grade)
         winner_node = self.choosing_node_to_transmit(list_nodes_with_pkt)
+
         # Return Node
         return winner_node
 
@@ -109,31 +113,49 @@ class Simulation:
         :param list_nodes_with_pkt: List of nodes with pkt to transmit
         :return: winner_node: node that wins the contention process
         """
+        list_value_mini_ranuras = []
         for node in list_nodes_with_pkt:
             node.set_value_mini_ranura()
+            list_value_mini_ranuras.append(node.get_value_mini_ranura())
 
-        min_value_ranura = min(list_nodes_with_pkt)
-        if min_value_ranura != 1:
+        min_value_ranura = min(list_value_mini_ranuras)
+        number_nodes_with_min_value = 0
+        index_node_transmit = 0
+        print(min_value_ranura)
+
+        for value_min_ranura in range(0, len(list_value_mini_ranuras)):
+            print(list_value_mini_ranuras[value_min_ranura])
+            if list_value_mini_ranuras[value_min_ranura] == min_value_ranura:
+                number_nodes_with_min_value = number_nodes_with_min_value + 1
+                index_node_transmit = value_min_ranura
+
+        if number_nodes_with_min_value != 1:
+            self.number_colision_pkt = self.number_colision_pkt + 1
             print("colision")
-        # TODO: Think in this implementation...
-        random_grade = randint(0, len(list_nodes_with_pkt)-1)
-        winner_node = list_nodes_with_pkt[random_grade]
-        return winner_node
+            print(list_value_mini_ranuras)
+            return None
+        else:
+            winner_node = list_nodes_with_pkt[index_node_transmit]
+            print(winner_node)
+            return winner_node
 
     def transmit_pkt_to_next_grade(self, num_grade):
         """
-
         :param num_grade: Grade that is transmiting a pkt
         :return: void
         """
         # Call cantention process
         node_to_trasmit = self.contention_process(num_grade)
-        node_to_trasmit.transmiting_pkt_to_next_grade()
-        index_node_transmit = node_to_trasmit.get_num_node()
-        print("Grado "+str(num_grade))
-        print(node_to_trasmit)
+        if node_to_trasmit == None:
+            #Colision case
+            print("Todo")
+        else:
+            node_to_trasmit.transmiting_pkt_to_next_grade()
+            index_node_transmit = node_to_trasmit.get_num_node()
+            print("Grado "+str(num_grade))
+            print(node_to_trasmit)
 
-        self.receive_pkt_in_grade(num_grade-1, index_node_transmit)
+            self.receive_pkt_in_grade(num_grade-1, index_node_transmit)
 
     def receive_pkt_in_grade(self, num_grade, index_node_receive):
         """
@@ -149,6 +171,13 @@ class Simulation:
         print("Grado " + str(num_grade))
 
         print(node_to_receive)
+    
+    """    
+    def verify_grade_zero (self, verify_num_grade):
+        if verify_num_grade==0 
+            
+     """
+    
 
     def print_network(self):
         """
