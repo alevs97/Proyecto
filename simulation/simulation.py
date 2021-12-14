@@ -216,7 +216,7 @@ class Simulation:
             pass
 
     def ini_sim(self):
-        while self.time_simulation < 1e5 * self.timeCycleWork:
+        while self.time_simulation < 1e4 * self.timeCycleWork:
             while self.time_arribe < self.time_simulation:
                 # self.variable = 0
 

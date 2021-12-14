@@ -25,7 +25,7 @@ if __name__ == '__main__':
             max_mini_ranuras=3,
             lambda_pkt=lambda_pkt,
             size_buffer=15,
-            num_grades=5,
+            num_grades=7,
             sigma=1e-3,
         )
         list_simulation.append(simulation_recursive)
